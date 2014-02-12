@@ -23,37 +23,76 @@ public class ScoresDataSource {
 	    dbHelper.close();
 	}
 	
-	public int searchSong(String song){
+	public int searchScoreSong(String songName, String songAuthor){
 		
-		Integer songId = -1;
-		open();
+		Integer songScore = -1;
+
 		//search the song to test if it has been introduced
 		Cursor cursor = database.query(ScoresDb.TABLE_NAME,
-		        new String[]{ScoresDb.COLUMN_SCORE} , ScoresDb.COLUMN_SONGNAME + " = \"" + song + "\"", null,
-		        null, null, null);
+		                               new String[]{ScoresDb.COLUMN_SCORE} , 
+		                               ScoresDb.COLUMN_SONGNAME + " = \"" + songName + "\" AND " + ScoresDb.COLUMN_AUTHOR + " = \"" + songAuthor + "\"", 
+		                               null,null, null, null);
+		
+		//if cursor is not null, return the _id from the song we have requested 
+		if ((cursor!= null)&&(cursor.moveToFirst())){
+			songScore = cursor.getInt(0);
+		}
+				
+		return songScore;
+	}
+	
+	
+	public int searchIdSong(String songName, String songAuthor){
+		
+		Integer songId = -1;
+
+		//search the song to test if it has been introduced
+		Cursor cursor = database.query(ScoresDb.TABLE_NAME,
+		                               new String[]{ScoresDb.COLUMN_ID} , 
+		                               ScoresDb.COLUMN_SONGNAME + " = \"" + songName + "\" AND " + ScoresDb.COLUMN_AUTHOR + " = \"" + songAuthor + "\"", 
+		                               null,null, null, null);
 		
 		//if cursor is not null, return the _id from the song we have requested 
 		if ((cursor!= null)&&(cursor.moveToFirst())){
 			songId = cursor.getInt(0);
 		}
-		
-		close();
 				
 		return songId;
 	}
-		
+			
 	
-	public void insertScore(String name, Integer sc) {
+	public void insertScore(String songName, String author, int sc) {
 		
-		open();
 	    ContentValues values = new ContentValues();
-	    values.put(ScoresDb.COLUMN_SONGNAME, name);
+	    values.put(ScoresDb.COLUMN_SONGNAME, songName);
+	    values.put(ScoresDb.COLUMN_AUTHOR, author);
 	    values.put(ScoresDb.COLUMN_SCORE, sc);
 	    
 	    long insertId = database.insert(ScoresDb.TABLE_NAME, null,
 	        values);
 	    
-	    close();
-	  }
+	}
+	
+	public void updateScore(String songName, String author, String trend){
+		
+		int score = searchScoreSong(songName, author);
+		ContentValues values = new ContentValues();
+	    values.put(ScoresDb.COLUMN_SONGNAME, songName);
+	    values.put(ScoresDb.COLUMN_AUTHOR, author);
+	    int id = searchIdSong(songName, author);
+	    String where = ScoresDb.COLUMN_ID + "=" + String.valueOf(id);
+	    
+	    //depending on the trend, increase or decrease the song score
+	    if (trend == "up" && score < 5){
+	    	values.put(ScoresDb.COLUMN_SCORE, score + 1);
+	    	long insertId = database.update(ScoresDb.TABLE_NAME, values, where, null);
+	    }
+	    
+	    if (trend == "down" && score >1){
+	    	values.put(ScoresDb.COLUMN_SCORE, score - 1);
+	    	long insertId = database.update(ScoresDb.TABLE_NAME, values, where, null);
+	    }
+		
+	}
 
 }

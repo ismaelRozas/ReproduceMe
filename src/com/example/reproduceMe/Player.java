@@ -14,25 +14,56 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Player extends ListActivity {
 	
 	public ArrayList<Song> songList = new ArrayList<Song>();
 	private SongsAdapter adapter;
+	ListView songListView; 
+	ScoresDataSource sds;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_player);
+		songListView = (ListView) findViewById(android.R.id.list);
 		
-		searchSongs();
+		//DataSource to obtain access to database (create and open)
+		sds = new ScoresDataSource(Player.this);
+		sds.open();
 		
+		
+		searchSongs();		
 		initPlayer();				
 	}
-
+	
+	protected void onResume(){
+		super.onResume();
+		Toast.makeText(Player.this , "onResume", 5).show();	
+	}
+	
+	protected void onRestart(){
+		super.onRestart();
+		Toast.makeText(Player.this , "onRestart", 5).show();
+		searchSongs();		
+		initPlayer();
+	}
+	
+	protected void onStart(){
+		super.onStart();
+		Toast.makeText(Player.this , "onStart", 5).show();
+	}
+	
+	protected void onDestroy(){
+		super.onDestroy();
+		sds.close();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -42,11 +73,12 @@ public class Player extends ListActivity {
 	
 	private void searchSongs(){
 		
+		//if the list is not empty, trash the previous songs
+		songList.clear();
+		
 		//Content resolver to read media files from phone
 		ContentResolver contentResolver = getContentResolver();
 		Uri uri = android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI ;
-		//DataSource to obtain access to database
-		ScoresDataSource scoresDataSource = new ScoresDataSource(Player.this);
 
 		Cursor cursor = contentResolver.query(uri, null, null, null, null);
 		
@@ -62,22 +94,18 @@ public class Player extends ListActivity {
 		    do {
 		       long thisId = cursor.getLong(idColumn);
 		       String thisTitle = cursor.getString(titleColumn);
-		       String thisArtist = cursor.getString(authorColumn);
+		       String thisAuthor = cursor.getString(authorColumn);
 		       
-		       //search song in the database. If does not exist, add a row with the default score
-		       ScoresDataSource sds = new ScoresDataSource(Player.this);
-		       sds.open();
-		       int songScore = sds.searchSong(thisTitle);
+		       //search song in the database. If does not exist, add a row with the default score		       
+		       int songScore = sds.searchScoreSong(thisTitle, thisAuthor);
 		       
 		       if (songScore == -1){
 		    	   songScore = 1;
-		    	   sds.insertScore(thisTitle, songScore);
+		    	   sds.insertScore(thisTitle, thisAuthor, songScore);
 		       }
-		       
-		       sds.close();
-		       
+		       		       
 		       // creating the song and adding it to array
-		       songList.add(new Song(thisArtist, thisTitle, songScore));
+		       songList.add(new Song(thisTitle, thisAuthor, songScore));
 		       
 		    } while (cursor.moveToNext());
 		}
@@ -87,7 +115,6 @@ public class Player extends ListActivity {
 	}
 	
 	private void initPlayer(){
-		ListView songListView = (ListView) findViewById(android.R.id.list);
 		adapter = new SongsAdapter(this, songList);
 		songListView.setAdapter(adapter);
 //		songListView.setOnItemClickListener(listener);
@@ -96,10 +123,22 @@ public class Player extends ListActivity {
 		songListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {                
+			public void onItemClick(AdapterView<?> parent, View v, int position,
+					long id) {        
+				
+				    //find the title and author song
+					TextView sn = (TextView) v.findViewById(R.id.titleSong);
+					TextView sa = (TextView) v.findViewById(R.id.authorSong );
+					String songName = sn.getText().toString();
+					String author = sa.getText().toString();
+					
+					//increase the song score
+				    sds.updateScore(songName, author, "up");
+				    ((BaseAdapter) songListView.getAdapter()).notifyDataSetChanged();
+					songListView.invalidate();
+				   				     
 					Intent intent = new Intent(Player.this, ListenSong.class);
-	                intent.putExtra("position", arg2);
+	                intent.putExtra("position", position);
 	                startActivity(intent);
 			}
         });

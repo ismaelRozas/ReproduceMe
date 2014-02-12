@@ -9,7 +9,7 @@ public class Song {
 	private String title;
 	private int score;
 	
-	Song(String au, String ti, int sc){
+	Song(String ti, String au, int sc){
 		this.author = au;
 		this.title = ti;
 		this.score = sc;

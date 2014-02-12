@@ -9,18 +9,58 @@
     tools:context=".Player" >
 
     <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical" >
-		
+
         <ListView
             android:id="@android:id/list"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="500dip" >
         </ListView>
-
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/previousBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:background="@null"
+        android:src="@drawable/previous_btn" />
+
+    <ImageButton
+        android:id="@+id/playBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/previousBtn"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/previousBtn"
+        android:background="@null"
+        android:src="@drawable/play_btn" />
+
+    <ImageButton
+        android:id="@+id/stopBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/nextBtn"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/nextBtn"
+        android:background="@null"
+        android:src="@drawable/stop_btn" />
+
+    <ImageButton
+        android:id="@+id/nextBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/linearLayout1"
+        android:layout_alignTop="@+id/previousBtn"
+        android:background="@null"
+        android:src="@drawable/next_btn" />
 
 </RelativeLayout>

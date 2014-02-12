@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+	android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dip" >
 
     <ImageView
@@ -13,32 +13,78 @@
         android:layout_marginRight="6dip"
         android:contentDescription="TODO"
         android:src="@drawable/ic_launcher" />
- 
+
     <TextView
         android:id="@+id/titleSong"
         android:layout_width="fill_parent"
         android:layout_height="26dip"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/icon"
+        android:layout_alignTop="@+id/icon"
+        android:layout_toRightOf="@+id/icon"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:text="Description"
+        android:layout_marginLeft="15dip"
+        android:text="@string/title_song"
         android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dip"
+        android:layout_marginRight="6dip"
+        android:layout_alignLeft="@+id/titleSong"
+        android:layout_below="@+id/titleSong" >
+
+        <TextView
+            android:id="@+id/authorSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unknown author"
+            android:textSize="12sp" />
         
-    <TextView
-        android:id="@+id/authorSong"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/titleSong"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/icon"
-        android:gravity="center_vertical"
-        android:text="Example application"
-        android:textSize="16sp" />
+         <TextView
+            android:id="@+id/scoreSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/authorSong"
+            android:layout_marginLeft="15dip"
+            android:text="Unknown score"
+            android:textSize="12sp" />
 
+         <ImageView
+             android:id="@+id/imageStar1"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="5dip"
+             android:layout_marginLeft="15dip"
+             android:src="@drawable/star_icon2" />
 
+         <ImageView
+             android:id="@+id/imageStar2"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="5dip"
+             android:src="@drawable/star_icon2" />
+
+         <ImageView
+             android:id="@+id/imageStar3"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="5dip"
+             android:src="@drawable/star_icon2" />
+
+         <ImageView
+             android:id="@+id/imageStar4"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="5dip"
+             android:src="@drawable/star_icon2" />
+
+         <ImageView
+             android:id="@+id/imageStar5"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="5dip"
+             android:src="@drawable/star_icon2" />
+        
+    </LinearLayout>
 
 </RelativeLayout> 

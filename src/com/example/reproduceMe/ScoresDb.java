@@ -10,6 +10,7 @@ public class ScoresDb extends SQLiteOpenHelper{
 	public static final String TABLE_NAME = "Scores";
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_SONGNAME = "songName";
+	public static final String COLUMN_AUTHOR= "authorName";
 	public static final String COLUMN_SCORE = "score";
 	public static final String DB_NAME = "Scores.db";
 	public static final int DB_VERSION = 1;
@@ -17,6 +18,7 @@ public class ScoresDb extends SQLiteOpenHelper{
 	public static final String DB_CREATE = "create table "
 		      + TABLE_NAME      + "(" + COLUMN_ID + " integer primary key autoincrement, " 
 			  + COLUMN_SONGNAME + " text not null, "
+			  + COLUMN_AUTHOR   + " text not null,"
 		      + COLUMN_SCORE    + " integer);";
 	
 	public ScoresDb(Context context){
